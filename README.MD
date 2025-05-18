@@ -1,12 +1,11 @@
-# 🍼 Commit Formatter Bot
+# 🪝 Captain Hook: WebHook Bot
 
 <p align="center">
-  <img src="./images/WebHookDCB.png" alt="Bot Face" width="180" />
+  <img src="./images/WebHookDCB.png" alt="Captain Hook Bot" width="180" />
 </p>
 
 <p align="center">
-  A tiny helper bot that lives in your Discord server and makes commit messages adorable 🧸 <br>
-  It listens for GitHub push events and posts cute little formatted updates in your channel 💬✨
+  A lightweight Discord bot that listens for GitHub push events and posts clean, formatted commit messages directly to your server via WebHook.
 </p>
 
 ---
@@ -16,48 +15,62 @@
 When someone pushes to GitHub:
 
 ```
-🔨 [Bryen] pushed [`abc1234`](https://github.com/user/repo/commit/abc1234): `Update readme and fix styles`
+🪝 PHTMGatt pushed: Update readme and fix styles
 ```
 
-The bot posts that to your server using a WebHook — no bot login needed!
+Captain Hook formats the commit and sends it to your selected Discord channel — no bot login or token required.
 
 ---
 
-## 🛠 Usage
+## ⚙️ Setup Instructions
 
-1. Go to your Discord server and open **channel settings**
-2. Go to **Integrations → Webhooks → New Webhook**
-3. Name it: `Commit Formatter Bot`
-4. Set the **channel** and **copy the WebHook URL**
-5. In your `.env` file:
+### 1. Create a WebHook in Discord
+
+1. Open your server and go to the desired **channel**
+2. Click the ⚙️ **Channel Settings** → **Integrations → Webhooks**
+3. Click **New Webhook** and copy the generated **Webhook URL**
+
+---
+
+### 2. Add the WebHook URL to your `.env`
 
 ```env
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/your_webhook_url
 ```
 
-6. Deploy the bot to Render or run locally with:
+---
 
+### 3. Deploy the Bot
+
+Run locally:
 ```bash
 npm install
 npm start
 ```
+
+Or deploy to Render using your preferred build steps.
 
 ---
 
 ## 📸 Demo
 
 <p align="center">
-  <img src="./images/BotUsage.webp" alt="Bot Usage Demo" width="450" />
+  <img src="./images/BotUsage.webp" alt="Captain Hook Bot Demo" width="450" />
 </p>
 
 ---
 
-## 🌐 Hosted on Render
+## 🌐 Live Endpoint (Render)
 
-> `https://discord-webhook-bot.onrender.com`
+> `https://discord-webhook-bot-1f23.onrender.com`
+
+Use this as the **GitHub Webhook URL**:
+```
+https://discord-webhook-bot-1f23.onrender.com/github
+```
 
 ---
 
 <p align="center">
-  Made with ❤️ by <strong>BryGuy</strong>
+  Made with 🧠 and ⚙️ by <strong>BryGuy</strong>
 </p>
