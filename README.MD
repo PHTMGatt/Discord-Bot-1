@@ -1,7 +1,7 @@
 
 <h1 align="center">
   🪝 Captain Hook: WebHook Bot
-  <img src="images/CapHook2.png" alt="Bot Icon" width="40" style="vertical-align: middle;" />
+  <img src="images/CapHook2.png" alt="Bot Icon" width="60" style="vertical-align: middle;" />
 </h1>
 
 <p align="center">
