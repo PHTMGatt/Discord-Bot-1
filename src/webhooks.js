@@ -8,22 +8,11 @@ const fetch = require("node-fetch");
 const app = express();
 app.use(express.json());
 
-// NOTE; basic cleanup for commit messages
-function toCamelCase(input) {
-  return input
-    .toLowerCase()
-    .replace(/[^a-zA-Z0-9 ]/g, "")
-    .split(" ")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join("");
-}
-
-// NOTE; format commit message cleanly for Discord
+// NOTE; format commit message cleanly for Discord (hook-style)
 function formatCommit(commit) {
-  const sha = commit.id.slice(0, 7);
-  const cleaned = toCamelCase(commit.message);
+  const msg = commit.message.replace(/\n/g, " ").trim();
   const author = commit.author?.username || "unknown";
-  return `🔨 **${author}** pushed [\`${sha}\`](${commit.url}): \`${cleaned}\``;
+  return `🪝 ${author} pushed: ${msg}`;
 }
 
 // NOTE; POST /github → triggered by GitHub webhook
