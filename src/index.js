@@ -15,7 +15,7 @@ const { formatCommits } = require("./webhooks");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// NOTE; serve static frontend files
+// NOTE; serve static frontend files (register form and CSS)
 app.use(express.static(path.join(__dirname, "..", "public")));
 
 // NOTE; GET /register → show registration form
@@ -61,7 +61,7 @@ app.post("/github", async (req, res) => {
   }
 });
 
-// NOTE; Health check
+// NOTE; Health check for Render
 app.get("/", (_, res) => res.send("✅ WebHook Bot is alive!"));
 
 // NOTE; start server

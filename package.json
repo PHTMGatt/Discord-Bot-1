@@ -12,6 +12,7 @@
     "discord-webhook-bot": "file:",
     "dotenv": "^16.3.1",
     "express": "^4.21.2",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "openai": "^4.100.0"
   }
 }
