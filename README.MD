@@ -1,54 +1,83 @@
 # 🪝 Captain Hook: WebHook Bot
 
 <p align="center">
-  <img src="./images/WebHookDCB.png" alt="Captain Hook Bot" width="180" />
+  <img src="images/CapHook2.png" alt="Captain Hook Bot" width="200" />
 </p>
 
 <p align="center">
-  A lightweight Discord bot that listens for GitHub push events and posts clean, formatted commit messages directly to your server via WebHook.
+  A smart and lightweight GitHub → Discord bot that automatically formats push commit messages using GPT and sends them to your Discord channel via webhook — no bot login required.
 </p>
 
 ---
 
 ## 💡 What It Does
 
-When someone pushes to GitHub:
+Whenever someone pushes to your GitHub repository:
 
 ```
-🪝 PHTMGatt pushed: Update readme and fix styles
+🪝 PHTMGatt pushed: Updated README and cleaned up styling
 ```
 
-Captain Hook formats the commit and sends it to your selected Discord channel — no bot login or token required.
+Captain Hook formats and posts the message in your Discord server using your webhook.
 
 ---
 
-## ⚙️ Setup Instructions
+## ⚙️ How to Use This Bot
 
-### 1. Create a WebHook in Discord
+### 1. Create a Discord WebHook
 
-1. Open your server and go to the desired **channel**
-2. Click the ⚙️ **Channel Settings** → **Integrations → Webhooks**
-3. Click **New Webhook** and copy the generated **Webhook URL**
+1. Go to your Discord **channel settings**
+2. Select **Integrations → Webhooks**
+3. Click **New Webhook**
+4. Name it and copy the **Webhook URL**
 
 ---
 
-### 2. Add the WebHook URL to your `.env`
+### 2. Register Your GitHub Repo
+
+Visit the live form at:
+
+```
+https://discord-webhook-bot-1f23.onrender.com/register
+```
+
+There, enter:
+- Your GitHub repo (e.g., `yourName/yourRepo`)
+- Your Discord WebHook URL
+
+✅ That’s it. No bot token. No deployment. Just register and push!
+
+---
+
+### 3. Add the GitHub WebHook
+
+In your GitHub repo:
+
+1. Go to **Settings → Webhooks**
+2. Click **Add Webhook**
+3. Use this as the **Payload URL**:
+```
+https://discord-webhook-bot-1f23.onrender.com/github
+```
+4. Set **Content Type**: `application/json`
+5. Select **Just the push event**
+
+---
+
+## 🔧 Optional `.env` (for personal/local use)
 
 ```env
-DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/your_webhook_url
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/your_webhook
+OPENAI_API_KEY=sk-...
 ```
 
 ---
 
-### 3. Deploy the Bot
+## 🤖 Powered by GPT
 
-Run locally:
-```bash
-npm install
-npm start
-```
+This bot uses your `OPENAI_API_KEY` (if available) to clean up commit messages with ChatGPT.
 
-Or deploy to Render using your preferred build steps.
+If the API key is missing, it falls back to simple formatting.
 
 ---
 
@@ -60,17 +89,15 @@ Or deploy to Render using your preferred build steps.
 
 ---
 
-## 🌐 Live Endpoint (Render)
+## 🧠 Why It’s Awesome
 
-> `https://discord-webhook-bot-1f23.onrender.com`
-
-Use this as the **GitHub Webhook URL**:
-```
-https://discord-webhook-bot-1f23.onrender.com/github
-```
+- 🔗 Works for any GitHub repo
+- 💬 No Discord bot needed
+- ⚙️ Hosted and ready to use
+- 🪝 Just register your info and push
 
 ---
 
 <p align="center">
-  Made with 🧠 and ⚙️ by <strong>BryGuy</strong>
+  Built with 🧠, ⚙️, and GPT by <strong>BryGuy</strong>
 </p>
