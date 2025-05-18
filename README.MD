@@ -26,30 +26,24 @@ Captain Hook formats and posts the commit message directly into your selected Di
 
 ### 1. Register Your Repo + Discord WebHook
 
-Head to the live form and fill out:
-
-```
-https://discord-webhook-bot-1f23.onrender.com/register
-```
+Click here to register:  
+👉 [Register Form](https://discord-webhook-bot-1f23.onrender.com/register)
 
 You'll be asked to provide:
-- Your GitHub repo name (e.g., `username/repo`)
+- Your GitHub username
+- Your GitHub repository name
 - Your Discord WebHook URL
-
-This allows the bot to post for that specific repo.
 
 ---
 
 ### 2. Add a WebHook to GitHub
 
-1. In your repo: go to **Settings → Webhooks**
+1. In your GitHub repo: go to **Settings → Webhooks**
 2. Click **Add Webhook**
-3. Paste this into **Payload URL**:
-```
-https://discord-webhook-bot-1f23.onrender.com/github
-```
+3. Use this as the **Payload URL**:  
+👉 [`https://discord-webhook-bot-1f23.onrender.com/github`](https://discord-webhook-bot-1f23.onrender.com/github)
 4. Content type: `application/json`
-5. Select event: **Just the push event**
+5. Event: **Just the push event**
 
 ---
 

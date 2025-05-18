@@ -23,9 +23,13 @@ app.get("/register", (_, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "register.html"));
 });
 
-// NOTE; POST /register → save repo and webhook mapping
+// NOTE; POST /register → save username + repo → webhook mapping
 app.post("/register", (req, res) => {
-  const { repo, webhook } = req.body;
+  const { username, reponame, webhook } = req.body;
+
+  // NOTE; build full GitHub repo path like "PHTMGatt/Discord-WebHook-Bot"
+  const repo = `${username}/${reponame}`;
+
   try {
     registerRepo(repo, webhook);
     res.status(200).send(`<p>✅ Registered ${repo}! You may now push to GitHub.</p>`);

@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register - Captain Hook</title>
-  <link rel="stylesheet" href="/register.css" />
+  <title>Captain Hook Bot Registration</title>
+  <link rel="stylesheet" href="register.css" />
 </head>
 <body>
-  <div class="form-wrapper">
+  <div class="glass-card">
     <h1>🪝 Captain Hook Bot Registration</h1>
-    <form method="POST" action="/register">
-      <label for="repo">GitHub Repository (e.g., username/repo):</label>
-      <input type="text" name="repo" required />
+    <form action="/register" method="POST">
+      <label for="username">GitHub Username:</label>
+      <input type="text" id="username" name="username" required />
 
-      <label for="webhook">Your Discord WebHook URL:</label>
-      <input type="url" name="webhook" required />
+      <label for="reponame">Repository Name:</label>
+      <input type="text" id="reponame" name="reponame" required />
+
+      <label for="webhook">Discord WebHook URL:</label>
+      <input type="url" id="webhook" name="webhook" required />
 
       <button type="submit">Register</button>
     </form>
