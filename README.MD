@@ -1,8 +1,7 @@
-<p align="center">
-  <img src="images/CapHook2.png" alt="Captain Hook Logo" width="180"/>
-</p>
-
-# 🪝 Captain Hook: WebHook Bot
+<h1 align="center">
+  <img src="images/CapHook2.png" alt="Captain Hook Logo" width="45" />
+  🪝 Captain Hook: WebHook Bot
+</h1>
 
 <p align="center">
   <img src="images/WebHookDCB.png" alt="Captain Hook Bot Banner" width="240"/>
@@ -11,6 +10,7 @@
 <p align="center">
   A smart and lightweight GitHub → Discord bot that formats push commit messages using GPT and posts them in your server using a WebHook — no token or bot login needed.
 </p>
+
 
 ---
 
