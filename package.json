@@ -1,5 +1,5 @@
 {
-  "name": "discord-local-bot",
+  "name": "discord-webhook-bot",
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
@@ -9,12 +9,9 @@
     "restart": "npm stop --if-present && npm start"
   },
   "dependencies": {
-    "@octokit/webhooks": "^13.9.0",
-    "body-parser": "^2.2.0",
-    "discord-local-bot": "file:",
-    "discord.js": "^14.11.0",
+    "discord-webhook-bot": "file:",
     "dotenv": "^16.3.1",
     "express": "^4.21.2",
-    "openai": "^4.100.0"
+    "node-fetch": "^2.6.7"
   }
 }

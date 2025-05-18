@@ -1,40 +1,46 @@
 # 🍼 Commit Formatter Bot
 
 <p align="center">
-  <img src="./images/DISCORD-BOT.avif" alt="Bot Face" width="180" />
+  <img src="./images/WebHookDCB.png" alt="Bot Face" width="180" />
 </p>
 
 <p align="center">
   A tiny helper bot that lives in your Discord server and makes commit messages adorable 🧸 <br>
-  It listens to whatever you type and replies with a cute little formatted update 💬✨
+  It listens for GitHub push events and posts cute little formatted updates in your channel 💬✨
 </p>
 
 ---
 
 ## 💡 What It Does
 
-When someone types:
+When someone pushes to GitHub:
 
 ```
-readme
+🔨 [Bryen] pushed [`abc1234`](https://github.com/user/repo/commit/abc1234): `Update readme and fix styles`
 ```
 
-The bot replies with:
-
-```
-✅ [Bryen] dropped a lil mimmit: `Readme`
-```
+The bot posts that to your server using a WebHook — no bot login needed!
 
 ---
 
 ## 🛠 Usage
 
-1. [Add the bot](https://discord.com/oauth2/authorize?client_id=1372387773062844436&scope=bot&permissions=345152) to your server.
-2. Go to the **channel settings**.
-3. Under **Permissions**, add the bot under **Roles/Members**.
-4. Toggle **✅ Send Messages** and **✅ Manage Messages** for that channel.
+1. Go to your Discord server and open **channel settings**
+2. Go to **Integrations → Webhooks → New Webhook**
+3. Name it: `Commit Formatter Bot`
+4. Set the **channel** and **copy the WebHook URL**
+5. In your `.env` file:
 
-> Now the bot will only work in the channels you approve!
+```env
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/your_webhook_url
+```
+
+6. Deploy the bot to Render or run locally with:
+
+```bash
+npm install
+npm start
+```
 
 ---
 
@@ -48,7 +54,7 @@ The bot replies with:
 
 ## 🌐 Hosted on Render
 
-> `https://discord-bot-1-e79s.onrender.com`
+> `https://discord-webhook-bot.onrender.com`
 
 ---
 

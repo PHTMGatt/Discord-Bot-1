@@ -1,67 +1,52 @@
-// #Note - Express keeps Render's free instance from sleeping
-const express = require('express');
+// NOTE; load environment variables (DISCORD_WEBHOOK_URL)
+require("dotenv").config();
+
+// NOTE; use Express to listen for GitHub webhooks
+const express = require("express");
 const app = express();
 
-app.get('/', (req, res) => res.send('Bot is alive!'));
-app.listen(3000, () => console.log('🌐 Web server running on port 3000'));
+// NOTE; use fetch to send messages directly to Discord WebHook
+const fetch = require("node-fetch");
 
-// #Note - Load environment variables like DISCORD_TOKEN from .env file
-require('dotenv').config();
+// NOTE; auto-parse incoming GitHub JSON payloads
+app.use(express.json());
 
-const { Client, GatewayIntentBits } = require('discord.js');
-
-// #Note - Intents required for reading messages
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
-});
-
-client.once('ready', () => {
-  console.log(`✅ Bot is live as ${client.user.tag}`);
-});
-
-// #Note - Convert message to CamelCase
-function toCamelCase(input) {
-  return input
-    .toLowerCase()
-    .replace(/[^a-zA-Z0-9 ]/g, '')
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('');
+// NOTE; basic cleanup for long or multiline commit messages
+function cleanMessage(msg) {
+  return msg.replace(/\n/g, " ").slice(0, 80);
 }
 
-// #Note - Only respond in explicitly authorized channels
-client.on('messageCreate', async (message) => {
-  if (message.author.bot || !message.guild) return;
+// NOTE; handle GitHub “push” events at /github
+app.post("/github", async (req, res) => {
+  const payload = req.body;
 
-  const botMember = await message.guild.members.fetchMe();
+  if (!payload?.commits) return res.sendStatus(204); // NOTE; no commits, no post
 
-  // Check for explicit permission overwrite in this channel
-  const channelOverwrites = message.channel.permissionOverwrites.cache;
-  const botOverwrite = channelOverwrites.get(botMember.id);
+  // NOTE; format each commit line for Discord
+  const lines = payload.commits.map((c) => {
+    const sha = c.id.slice(0, 7);
+    const msg = cleanMessage(c.message);
+    const author = c.author?.username || "unknown";
+    return `🔨 **${author}** pushed [\`${sha}\`](${c.url}): \`${msg}\``;
+  });
 
-  // Only respond if explicitly granted SendMessages in this channel
-  if (!botOverwrite || !botOverwrite.allow.has('SendMessages')) return;
-
-  const username = message.member?.displayName || message.author.username;
-  const cleanedMessage = toCamelCase(message.content);
-  const reply = `✅ ${username} committed: \`${cleanedMessage}\``;
-
+  // NOTE; POST formatted message directly to Discord via WebHook URL
   try {
-    if (botOverwrite.allow.has('ManageMessages')) {
-      await message.delete();
-    }
-    await message.channel.send(reply);
-  } catch (error) {
-    console.error('❌ Failed to delete or respond:', error);
+    await fetch(process.env.DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: lines.join("\n") }),
+    });
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error("❌ Failed to send to Discord:", err);
+    res.sendStatus(500);
   }
 });
 
-// #Note - Start the bot using the token from .env
-client.login(process.env.DISCORD_TOKEN);
+// NOTE; simple health check route for Render
+app.get("/", (_, res) => res.send("✅ WebHook Bot is alive!"));
 
-// NOTE; register the Discord bot with webhook handler
-webhookMiddleware.setClient(client);
+// NOTE; start server on port 3000 (Render default)
+app.listen(3000, () => console.log("🚀 Server listening on port 3000"));
