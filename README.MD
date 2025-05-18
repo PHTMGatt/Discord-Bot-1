@@ -26,8 +26,10 @@ Captain Hook formats and posts the commit message directly into your selected Di
 
 ### 1. Register Your Repo + Discord WebHook
 
-Click here to register:  
-👉 [Register Form](https://discord-webhook-bot-1f23.onrender.com/register)
+Visit the registration form:
+```
+https://discord-webhook-bot-1f23.onrender.com/register
+```
 
 You'll be asked to provide:
 - Your GitHub username
@@ -40,8 +42,10 @@ You'll be asked to provide:
 
 1. In your GitHub repo: go to **Settings → Webhooks**
 2. Click **Add Webhook**
-3. Use this as the **Payload URL**:  
-👉 [`https://discord-webhook-bot-1f23.onrender.com/github`](https://discord-webhook-bot-1f23.onrender.com/github)
+3. Use this as the **Payload URL**:
+```
+https://discord-webhook-bot-1f23.onrender.com/github
+```
 4. Content type: `application/json`
 5. Event: **Just the push event**
 
@@ -75,6 +79,6 @@ The API key enables GPT formatting. Without it, the bot falls back to local mess
 
 ---
 
-<p align="center">
-  Built with ⚙️, 🧠, and AI by <strong>BryGuy</strong>
+<p align="center" style="font-size: 0.9rem; color: #666;">
+  Developed and maintained by <strong>Bryen Gatt</strong> • MIT License
 </p>
