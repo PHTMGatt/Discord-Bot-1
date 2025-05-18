@@ -1,45 +1,47 @@
-// NOTE; this module sets up a single /github endpoint
-//       and handles all incoming “push” events from GitHub
+// NOTE; OpenAI client for GPT commit cleanup
+const { Configuration, OpenAIApi } = require("openai");
 
-require("dotenv").config();
-const express = require("express");
-const fetch = require("node-fetch");
-
-const app = express();
-app.use(express.json());
-
-// NOTE; format commit message cleanly for Discord (hook-style)
-function formatCommit(commit) {
-  const msg = commit.message.replace(/\n/g, " ").trim();
-  const author = commit.author?.username || "unknown";
-  return `🪝 ${author} pushed: ${msg}`;
+// NOTE; fallback commit cleaner
+function cleanLocalMessage(msg) {
+  return msg.replace(/\n/g, " ").trim().slice(0, 80);
 }
 
-// NOTE; POST /github → triggered by GitHub webhook
-app.post("/github", async (req, res) => {
-  const { commits } = req.body;
+// NOTE; GPT-based formatter using OPENAI_API_KEY
+async function cleanWithChatGPT(rawMessage) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return cleanLocalMessage(rawMessage);
 
-  if (!commits || !commits.length) return res.sendStatus(204);
-
-  // NOTE; format all commits
-  const lines = commits.map(formatCommit).join("\n");
-
-  // NOTE; send to Discord via WebHook URL
   try {
-    await fetch(process.env.DISCORD_WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: lines }),
+    const config = new Configuration({ apiKey });
+    const openai = new OpenAIApi(config);
+
+    const prompt = `Rewrite this Git commit message to be short, clear, and Discord-ready:\n\n"${rawMessage}"`;
+
+    const response = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 60,
     });
-    res.sendStatus(200);
+
+    return response.data.choices?.[0]?.message?.content.trim() || cleanLocalMessage(rawMessage);
   } catch (err) {
-    console.error("❌ Failed to post to Discord:", err);
-    res.sendStatus(500);
+    console.error("⚠️ GPT formatting failed:", err.message);
+    return cleanLocalMessage(rawMessage);
   }
-});
+}
 
-// NOTE; Render health check
-app.get("/", (_, res) => res.send("✅ WebHook Bot is alive!"));
+// NOTE; formats all commits for a single push
+async function formatCommits(commits) {
+  const lines = await Promise.all(
+    commits.map(async (commit) => {
+      const author = commit.author?.username || "unknown";
+      const cleaned = await cleanWithChatGPT(commit.message);
+      return `🪝 ${author} pushed: ${cleaned}`;
+    })
+  );
+  return lines.join("\n");
+}
 
-// NOTE; Start server
-app.listen(3000, () => console.log("🚀 Server running on port 3000"));
+module.exports = {
+  formatCommits,
+};

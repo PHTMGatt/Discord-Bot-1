@@ -1,42 +1,57 @@
-// NOTE; load environment variables (DISCORD_WEBHOOK_URL)
+// NOTE; load environment variables (DISCORD_WEBHOOK_URL, OPENAI_API_KEY)
 require("dotenv").config();
 
-// NOTE; use Express to listen for GitHub webhooks
+// NOTE; core modules
 const express = require("express");
+const path = require("path");
+const fetch = require("node-fetch");
 const app = express();
 
-// NOTE; use fetch to send messages directly to Discord WebHook
-const fetch = require("node-fetch");
+// NOTE; import helper modules
+const { registerRepo, getWebhookForRepo } = require("./register");
+const { formatCommits } = require("./webhooks");
 
-// NOTE; auto-parse incoming GitHub JSON payloads
+// NOTE; parse JSON and form data
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// NOTE; handle GitHub “push” events at /github
+// NOTE; serve static frontend files
+app.use(express.static(path.join(__dirname, "..", "public")));
+
+// NOTE; GET /register → show registration form
+app.get("/register", (_, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "register.html"));
+});
+
+// NOTE; POST /register → save repo and webhook mapping
+app.post("/register", (req, res) => {
+  const { repo, webhook } = req.body;
+  try {
+    registerRepo(repo, webhook);
+    res.status(200).send(`<p>✅ Registered ${repo}! You may now push to GitHub.</p>`);
+  } catch (err) {
+    res.status(400).send(`<p>❌ Error: ${err.message}</p>`);
+  }
+});
+
+// NOTE; GitHub WebHook route
 app.post("/github", async (req, res) => {
   const payload = req.body;
+  const repoName = payload?.repository?.full_name;
+  const commits = payload?.commits;
 
-  if (!payload?.commits) return res.sendStatus(204); // NOTE; no commits, no post
+  if (!repoName || !commits?.length) return res.sendStatus(204);
 
-  // NOTE; format each commit line for Discord (hook-style)
-  const lines = payload.commits.map((c) => {
-    const msg = c.message.replace(/\n/g, " ").trim();
-    const author = c.author?.username || "unknown";
-    return `🪝 ${author} pushed: ${msg}`;
-  });
+  const webhook = getWebhookForRepo(repoName);
+  if (!webhook) return res.status(404).send("No webhook registered for this repo");
 
-  // NOTE; validate WebHook URL
-  const webhook = process.env.DISCORD_WEBHOOK_URL;
-  if (!webhook || !webhook.startsWith("http")) {
-    console.error("❌ Invalid or missing DISCORD_WEBHOOK_URL");
-    return res.sendStatus(500);
-  }
-
-  // NOTE; POST formatted message directly to Discord via WebHook URL
   try {
+    const message = await formatCommits(commits);
+
     await fetch(webhook, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: lines.join("\n") }),
+      body: JSON.stringify({ content: message }),
     });
 
     res.sendStatus(200);
@@ -46,8 +61,8 @@ app.post("/github", async (req, res) => {
   }
 });
 
-// NOTE; simple health check route for Render
+// NOTE; Health check
 app.get("/", (_, res) => res.send("✅ WebHook Bot is alive!"));
 
-// NOTE; start server on port 3000 (Render default)
-app.listen(3000, () => console.log("🚀 Server listening on port 3000"));
+// NOTE; start server
+app.listen(3000, () => console.log("🚀 Server running on port 3000"));
