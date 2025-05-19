@@ -8,7 +8,7 @@ const fetch = require("node-fetch");
 const app = express();
 
 // NOTE; import helper modules
-const { registerRepo, getWebhookForRepo } = require("./register");
+const { registerRepo, getWebhookForRepo, loadWebhooks } = require("./webhooks");
 const { formatCommits } = require("./webhooks");
 
 // NOTE; parse JSON and form data
@@ -17,6 +17,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // NOTE; serve static frontend files (register form and CSS)
 app.use(express.static(path.join(__dirname, "..", "public")));
+
+// NOTE; load saved webhooks from disk on server start
+loadWebhooks();
 
 // NOTE; GET /register → show registration form
 app.get("/register", (_, res) => {
