@@ -1,12 +1,12 @@
-// NOTE; OpenAI client for GPT commit cleanup
+// Note; OpenAI client for GPT commit cleanup
 const { Configuration, OpenAIApi } = require("openai");
 
-// NOTE; fallback commit cleaner (used if no API key or GPT fails)
+// Note; fallback formatter if GPT fails or no API key
 function cleanLocalMessage(msg) {
   return msg.replace(/\n/g, " ").trim().slice(0, 80);
 }
 
-// NOTE; GPT-based formatter using OPENAI_API_KEY from .env
+// Note; GPT-based formatter using OPENAI_API_KEY from .env
 async function cleanWithChatGPT(rawMessage) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return cleanLocalMessage(rawMessage);
@@ -30,7 +30,7 @@ async function cleanWithChatGPT(rawMessage) {
   }
 }
 
-// NOTE; formats all commits for a single GitHub push
+// Note; Format each commit from a GitHub push into a readable line
 async function formatCommits(commits) {
   const lines = await Promise.all(
     commits.map(async (commit) => {
